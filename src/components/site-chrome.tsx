@@ -49,7 +49,7 @@ export function Footer() {
         <FooterGroup title="Learn" links={[["Documentation", "/docs"], ["Ecosystem", "/ecosystem"], ["Compatibility", "/docs/compatibility/compatibility-tiers"]]} />
         <div>
           <p className="mb-4 font-mono text-xs uppercase text-muted-foreground">Community</p>
-          {[["Cordis Plugins", "https://github.com/cordisplugins"], ["ACRYL", "https://github.com/acryldev/acryl"], ["ACRYL Blends", "https://acrylblends.github.io"], ["DeepSeek Harness Cordis tutorial", "https://deepseek-harness.github.io/deepseek-harness/en/develop/cordis-tutorial/"]].map(([label, href]) => <a key={label} href={href} target="_blank" rel="noreferrer" className="mb-3 flex items-center gap-1.5 text-sm text-foreground hover:text-primary">{label}<ExternalLink size={12} /></a>)}
+          {[["acryl.dev — the product", "https://acryl.dev"], ["ACRYL Blends — the Blend registry", "https://acrylblends.github.io"], ["acryldev/acryl — source", "https://github.com/acryldev/acryl"], ["cordisplugins (org)", "https://github.com/cordisplugins"], ["DeepSeek Harness Cordis tutorial", "https://deepseek-harness.github.io/deepseek-harness/en/develop/cordis-tutorial/"]].map(([label, href]) => <a key={label} href={href} target="_blank" rel="noreferrer" className="mb-3 flex items-center gap-1.5 text-sm text-foreground hover:text-primary">{label}<ExternalLink size={12} /></a>)}
         </div>
       </div>
       <div className="border-t border-border px-6 py-5"><div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-3 font-mono text-[10px] uppercase text-muted-foreground"><span>Community registry · Open infrastructure</span><span>Protocol first. Composition ready.</span></div></div>

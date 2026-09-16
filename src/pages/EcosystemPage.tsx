@@ -30,6 +30,7 @@ export default function EcosystemPage() {
           <div className="mt-12">
             <Status>Real ACRYL plugins in this registry</Status>
             <div className="mt-4 grid gap-3 sm:grid-cols-2">{acrylPlugins.map((p) => <Link key={p.slug} to={`/plugins/p/${p.slug}`} className="border border-border p-4 hover:border-primary"><p className="font-mono text-sm font-semibold">{p.name}</p><p className="mt-1 text-xs text-muted-foreground">{p.summary}</p></Link>)}</div>
+            <a href="https://acryl.dev" target="_blank" rel="noreferrer" className="btn-primary mt-6 inline-flex">Visit acryl.dev</a>
           </div>
         )}
         {raw === "how-cordis-powers-acryl-blends" && (
