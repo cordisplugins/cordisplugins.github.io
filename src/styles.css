@@ -34,6 +34,23 @@
   --ink: oklch(0.15 0.016 215); --ink-foreground: oklch(0.97 0.006 90); --ink-muted: oklch(0.68 0.018 90); --ink-border: oklch(0.28 0.018 215);
   --warning: oklch(0.62 0.15 65); --success: oklch(0.53 0.13 155); --overlay: oklch(0.12 0.02 240 / 0.72);
 }
+/* Same variable names, dark values. Applied via a `.dark` class on <html> (index.html's inline
+   script sets it before paint; theme-toggle.tsx toggles it and persists the choice). The gold
+   `primary` stays the same vivid value in both themes - it is the one color already tuned to pop
+   on a light OR dark surface, per this site's own `ink` palette used for its always-dark code blocks. */
+:root.dark {
+  --background: oklch(0.16 0.014 215); --foreground: oklch(0.94 0.01 90);
+  --card: oklch(0.2 0.016 215); --card-foreground: oklch(0.94 0.01 90);
+  --popover: oklch(0.2 0.016 215); --popover-foreground: oklch(0.94 0.01 90);
+  --primary: oklch(0.82 0.17 85); --primary-foreground: oklch(0.16 0.02 215);
+  --secondary: oklch(0.26 0.018 215); --secondary-foreground: oklch(0.94 0.01 90);
+  --muted: oklch(0.26 0.018 215); --muted-foreground: oklch(0.65 0.018 90);
+  --accent: oklch(0.28 0.03 90); --accent-foreground: oklch(0.9 0.05 90);
+  --border: oklch(0.32 0.02 215); --input: oklch(0.32 0.02 215); --ring: oklch(0.82 0.17 85);
+  --surface-2: oklch(0.22 0.018 215);
+  --code: oklch(0.12 0.016 215); --code-foreground: oklch(0.9 0.03 90);
+  --warning: oklch(0.72 0.15 70); --success: oklch(0.65 0.14 155); --overlay: oklch(0.05 0.02 240 / 0.72);
+}
 *{border-color:var(--border)} html{scroll-behavior:smooth} body{margin:0;background:var(--background);color:var(--foreground);font-family:var(--font-sans);letter-spacing:0} button,a{transition-duration:160ms} button{cursor:pointer} ::selection{background:var(--primary);color:var(--primary-foreground)}
 @utility btn-primary {display:inline-flex;min-height:2.75rem;align-items:center;justify-content:center;gap:.5rem;background:var(--primary);padding:.65rem 1rem;color:var(--primary-foreground);font-size:.875rem;font-weight:600;&:hover{opacity:.86}}
 @utility btn-secondary {display:inline-flex;min-height:2.75rem;align-items:center;justify-content:center;gap:.5rem;border:1px solid var(--input);background:var(--background);padding:.65rem 1rem;color:var(--foreground);font-size:.875rem;font-weight:600;&:hover{background:var(--muted)}}

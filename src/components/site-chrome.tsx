@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { ExternalLink, Github, Menu, Search, X } from "lucide-react";
 import { useState } from "react";
+import { ThemeToggle } from "./theme-toggle";
 
 const nav = [["Home", "/"], ["Browse Plugins", "/plugins"], ["Docs", "/docs"], ["Publish", "/publish"], ["Ecosystem", "/ecosystem"], ["Blog", "/blog"]] as const;
 
@@ -30,6 +31,7 @@ export function Header() {
         </nav>
         <div className="ml-auto hidden items-center gap-2 sm:flex">
           <Link to="/plugins" aria-label="Search plugins" className="icon-button"><Search size={18}/></Link>
+          <ThemeToggle/>
           <a href="https://github.com/cordisplugins" target="_blank" rel="noreferrer" aria-label="Cordis on GitHub" className="icon-button"><Github size={18}/></a>
           <Link to="/publish" className="btn-primary">Publish a plugin</Link>
         </div>

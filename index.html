@@ -5,6 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="/favicon.png" type="image/png" />
     <title>Cordis Plugins — the plugin registry</title>
+    <script>
+      // Applied before paint so switching pages or reloading never flashes the wrong theme.
+      // Reads the same key the toggle button writes (theme-toggle.tsx / "cordisplugins-theme").
+      (function () {
+        try {
+          var stored = localStorage.getItem("cordisplugins-theme");
+          var dark = stored === "dark" || (stored !== "light" && matchMedia("(prefers-color-scheme: dark)").matches);
+          if (dark) document.documentElement.classList.add("dark");
+        } catch (e) {}
+      })();
+    </script>
     <meta name="description" content="Discover, build, and publish Cordis plugins for ACRYL and DeepSeek Harness. The smallest building blocks of Cordis-compatible systems." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
