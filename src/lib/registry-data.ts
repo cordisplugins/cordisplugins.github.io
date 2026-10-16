@@ -1,3 +1,4 @@
+import discovered from "../data/discovered-plugins.json";
 import { Blocks, Bot, Box, Braces, Cable, Database, Palette, PanelsTopLeft, type LucideIcon } from "lucide-react";
 
 export const slugify = (value: string) => value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
@@ -16,6 +17,16 @@ export type Plugin = {
   acrylPackage?: boolean;
   provides: string[];
   consumes: string[];
+  /** Discovered from a GitHub release (scripts/sync-plugins.mjs): its version, release, tarball and how to install it. */
+  version?: string;
+  releaseTag?: string;
+  published?: string | null;
+  tarball?: string;
+  integrity?: string;
+  install?: string;
+  acrylPull?: string;
+  /** UI slots it declares and fills, as ACRYL generates them from its code. */
+  slots?: { offers: string[]; fills: string[] };
 };
 
 export type Category = {
@@ -42,11 +53,11 @@ export const categories: Category[] = [
   { slug: "community-interop", name: "Community / Interop", description: "Bridges across Cordis-compatible systems.", icon: Cable, count: 0 },
 ];
 
-// Every real, currently-published Cordis plugin this ecosystem has actually
+// The hand-written entries: every real, currently-published Cordis plugin this ecosystem has actually
 // built so far — not placeholder registry data. Three live inside the
 // acryldev/acryl monorepo (repoUrl points at plugins/<name> there); the rest
 // are their own repos already transferred to github.com/cordisplugins.
-export const plugins: Plugin[] = [
+const maintainedPlugins: Plugin[] = [
   {
     slug: "cordis-plugin-market",
     name: "cordis-plugin-market",
@@ -173,6 +184,14 @@ export const plugins: Plugin[] = [
     provides: ["cordis.context"],
     consumes: ["agent-engine"],
   },
+];
+
+// Every public repository with the topic cordis-plugin and a release tarball, refreshed by scripts/sync-plugins.mjs. A hand-written entry above
+// wins over a discovered one with the same name.
+const maintainedNames = new Set(maintainedPlugins.map((p) => p.name));
+export const plugins: Plugin[] = [
+  ...maintainedPlugins,
+  ...(discovered.plugins as Plugin[]).filter((p) => !maintainedNames.has(p.name)),
 ];
 
 for (const c of categories) c.count = plugins.filter((p) => p.category === c.slug).length;

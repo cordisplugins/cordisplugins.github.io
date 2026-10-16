@@ -18,7 +18,7 @@ export default function PluginDetail() {
           <div className="flex flex-wrap items-center gap-3"><span className="grid h-12 w-12 place-items-center border border-border bg-surface-2"><Box className="text-primary" /></span><CompatibilityBadge value={p.compatibility} />{p.acrylPackage && <span className="border border-primary px-2 py-1 font-mono text-[10px] text-primary">ACRYL-PACKAGE</span>}{p.private && <span className="inline-flex items-center gap-1 border border-border px-2 py-1 font-mono text-[10px] uppercase text-muted-foreground"><Lock size={11} />Not yet loadable</span>}</div>
           <h1 className="mt-6 break-words font-mono text-3xl font-semibold sm:text-5xl">{p.name}</h1>
           <p className="mt-5 max-w-3xl text-lg leading-8 text-muted-foreground">{p.summary}</p>
-          {!p.private && <div className="mt-8"><CopyCommand command={`pnpm add ${p.name}`} /></div>}
+          {!p.private && <div className="mt-8 space-y-3"><CopyCommand command={p.install ?? `pnpm add ${p.name}`} />{p.acrylPull && <CopyCommand command={p.acrylPull} />}</div>}
           <section className="prose-cordis py-10">
             <h2>About</h2>
             <p>{p.name} is a lifecycle-safe Cordis plugin. It registers its capability only while active and disposes every effect when unloaded.</p>
@@ -33,13 +33,20 @@ export default function PluginDetail() {
               <div className="border border-border p-5"><p className="font-mono text-xs uppercase text-primary">Provides</p>{p.provides.length ? p.provides.map((x) => <code key={x} className="mt-3 block text-sm">ctx.{x}</code>) : <p className="mt-3 text-sm text-muted-foreground">None yet declared.</p>}</div>
               <div className="border border-border p-5"><p className="font-mono text-xs uppercase text-primary">Consumes</p>{p.consumes.length ? p.consumes.map((x) => <code key={x} className="mt-3 block text-sm">ctx.{x}</code>) : <p className="mt-3 text-sm text-muted-foreground">None yet declared.</p>}</div>
             </div>
+            {p.slots && (p.slots.fills.length > 0 || p.slots.offers.length > 0) && <>
+              <h2>Where it appears</h2>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="border border-border p-5"><p className="font-mono text-xs uppercase text-primary">Fills UI slots</p>{p.slots.fills.length ? p.slots.fills.map((x) => <code key={x} className="mt-3 block text-sm">{x}</code>) : <p className="mt-3 text-sm text-muted-foreground">None.</p>}</div>
+                <div className="border border-border p-5"><p className="font-mono text-xs uppercase text-primary">Offers UI slots</p>{p.slots.offers.length ? p.slots.offers.map((x) => <code key={x} className="mt-3 block text-sm">{x}</code>) : <p className="mt-3 text-sm text-muted-foreground">None.</p>}</div>
+              </div>
+            </>}
             <h2>Lifecycle</h2>
             <p>All listeners and service registrations are attached to the plugin's Fiber. Hot reload replaces the Fiber atomically without leaking effects.</p>
           </section>
         </article>
         <aside className="space-y-4">
-          <div className="border border-border bg-card p-5"><p className="font-mono text-xs uppercase text-muted-foreground">Package</p>{[["Publisher", `@${p.publisher}`], ["Category", p.category], ["License", "MIT"]].map(([a, b]) => <div key={a} className="mt-4 flex justify-between gap-3 text-sm"><span className="text-muted-foreground">{a}</span><b>{b}</b></div>)}</div>
-          <div className="border border-border p-5"><p className="font-mono text-xs uppercase text-muted-foreground">Provenance</p><p className="mt-4 text-sm"><b>@{p.publisher}</b></p><a className="mt-4 inline-flex items-center gap-2 text-sm text-primary" href={p.repoUrl} target="_blank" rel="noreferrer">Source repository <ExternalLink size={12} /></a></div>
+          <div className="border border-border bg-card p-5"><p className="font-mono text-xs uppercase text-muted-foreground">Package</p>{[["Publisher", `@${p.publisher}`], ...(p.version ? [["Version", p.version]] : []), ...(p.published ? [["Released", p.published]] : []), ["Category", p.category], ["License", "MIT"]].map(([a, b]) => <div key={a} className="mt-4 flex justify-between gap-3 text-sm"><span className="text-muted-foreground">{a}</span><b>{b}</b></div>)}</div>
+          <div className="border border-border p-5"><p className="font-mono text-xs uppercase text-muted-foreground">Provenance</p><p className="mt-4 text-sm"><b>@{p.publisher}</b></p><a className="mt-4 inline-flex items-center gap-2 text-sm text-primary" href={p.repoUrl} target="_blank" rel="noreferrer">Source repository <ExternalLink size={12} /></a>{p.integrity && <p className="mt-4 break-all font-mono text-[11px] text-muted-foreground" title="sha512 of the release tarball">{p.integrity}</p>}</div>
           {!p.private && <div className="border border-border p-5"><p className="font-mono text-xs uppercase text-muted-foreground">Used in these Blends</p><p className="mt-4 flex items-center gap-2 text-sm text-muted-foreground"><GitFork size={16} className="text-primary" />See <a className="text-primary" href="https://acrylblends.github.io" target="_blank" rel="noreferrer">acrylblends.github.io</a> for current compositions</p></div>}
           <div className="flex items-center gap-2 border border-primary/40 bg-primary/10 p-4 text-sm"><PackageCheck size={20} className="text-primary" />Registry metadata verified against the source repository</div>
         </aside>

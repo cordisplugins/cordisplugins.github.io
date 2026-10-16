@@ -3,6 +3,9 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  schedule:
+    # The registry is discovered (topic cordis-plugin + a release tarball), so a new plugin appears within the hour without a pull request.
+    - cron: '17 * * * *'
   workflow_dispatch:
 
 permissions:
@@ -21,6 +24,11 @@ jobs:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
       - run: bun install --frozen-lockfile
+      - name: Discover released Cordis plugins (topic cordis-plugin)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bun run sync
+      - run: bun run test
       - run: bun run build
       - uses: actions/upload-pages-artifact@v3
         with:

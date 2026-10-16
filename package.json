@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "sync": "node scripts/sync-plugins.mjs",
+    "test": "node --test scripts/lib/*.test.mjs"
   },
   "dependencies": {
     "lucide-react": "^0.575.0",
