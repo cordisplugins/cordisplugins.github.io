@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "bun scripts/build-index.ts && vite build",
     "preview": "vite preview",
     "sync": "node scripts/sync-plugins.mjs",
     "test": "node --test scripts/lib/*.test.mjs"
