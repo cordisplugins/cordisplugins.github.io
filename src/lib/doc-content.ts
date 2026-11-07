@@ -179,9 +179,10 @@ export const docContent: Record<string, DocEntry> = {
   },
 
   "compatibility/compatibility-tiers": {
-    intro: "A plugin declares one of three compatibility tiers: Both, ACRYL, or DSH stock.",
+    intro: "A plugin declares one of four compatibility tiers: Both, ACRYL, ACRYL Blends, or DSH stock.",
     body: [{ paragraphs: [
       "\"Both\" means the plugin runs unmodified against stock DeepSeek Harness and against ACRYL, using only ordinary Cordis primitives — `cordis-plugin-market` and `dsh-cordis` are both exactly this. \"ACRYL\" means the plugin assumes ACRYL-specific services or surfaces and will not resolve its dependencies outside an ACRYL instance — every editor and canvas plugin in this registry today is ACRYL-tier, because they inject ACRYL Desktop's own shell services. \"DSH stock\" is reserved for plugins that assume the vanilla DeepSeek Harness surface specifically and intentionally avoid ACRYL-only services.",
+      "\"ACRYL Blends\" means the plugin was made in an acrylblends app and carries the `acrylblends` keyword: it uses that framework's services and installs with the app's own `plugin pull`.",
     ]}],
   },
   "compatibility/declaring-compatibility": {

@@ -44,3 +44,25 @@ test('category and compatibility are computed, and a package without the cordis-
   assert.equal(compatibilityOf({}), 'DSH stock')
   assert.equal(pluginFromRelease({ manifest: { ...quickNotes, keywords: ['dsh-plugin'] }, repository: 'r', owner: 'o', release, asset, integrity: 'x' }), null)
 })
+
+const pomodoro = {
+  name: 'acrylblends-pomodoro', version: '0.1.0', description: 'A timer', keywords: ['cordis', 'cordis-plugin', 'acrylblends'],
+  acryl: { schemaVersion: 1, requires: { host: ['router', 'routerHttp'] }, provides: { host: ['timer'] }, slots: { offers: [], fills: [] } },
+}
+const pomodoroAsset = { name: 'acrylblends-pomodoro-0.1.0.tgz', browser_download_url: 'https://github.com/inboxxobni/acrylblends-pomodoro/releases/download/v0.1.0/acrylblends-pomodoro-0.1.0.tgz' }
+
+test('a plugin made in an acrylblends app says so, whatever it requires, and installs with the app\'s own pull', () => {
+  assert.equal(compatibilityOf(pomodoro), 'ACRYL Blends')
+  assert.equal(compatibilityOf({ keywords: ['acrylblends'] }), 'ACRYL Blends')
+  assert.equal(compatibilityOf({ ...pomodoro, acryl: { requires: { host: ['appInstance'] } } }), 'ACRYL Blends')
+  const entry = pluginFromRelease({ manifest: pomodoro, repository: 'https://github.com/inboxxobni/acrylblends-pomodoro', owner: 'inboxxobni', release: { tag_name: 'v0.1.0', published_at: '2026-11-07T05:00:00Z' }, asset: pomodoroAsset, integrity: 'sha512-x' })
+  assert.deepEqual(
+    [entry.compatibility, entry.consumes, entry.provides, entry.install, entry.acrylPull],
+    ['ACRYL Blends', ['router', 'routerHttp'], ['timer'], 'npm run acryl -- plugin pull github:inboxxobni/acrylblends-pomodoro@0.1.0', undefined],
+  )
+})
+
+test('a plugin without the acrylblends keyword keeps its tier and its DSH and ACRYL lines', () => {
+  assert.equal(compatibilityOf({ keywords: ['cordis-plugin'], acryl: { requires: { host: ['connection'] } } }), 'Both')
+  assert.equal(compatibilityOf({ keywords: 'acrylblends' }), 'DSH stock')
+})

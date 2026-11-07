@@ -57,14 +57,26 @@ export function categoryOf(manifest) {
   return 'services'
 }
 
+/** Made in an acrylblends app: its services are that framework's (`router`, `routerHttp`), and it installs with that app's own pull. */
+const madeForBlends = manifest => Array.isArray(manifest.keywords) && manifest.keywords.includes('acrylblends')
+
 /**
- * From the service contract: "ACRYL" when it needs an ACRYL-only service, "Both" when every service it needs stock DSH has too. Without a
- * contract nothing is known beyond what it was built for, stock DSH ("DSH stock"); it may well run in ACRYL, but the registry does not claim it.
+ * "ACRYL Blends" for a plugin labelled `acrylblends`, whatever it requires. Otherwise from the service contract: "ACRYL" when it needs an
+ * ACRYL-only service, "Both" when every service it needs stock DSH has too. Without a contract nothing is known beyond what it was built for,
+ * stock DSH ("DSH stock"); it may well run in ACRYL, but the registry does not claim it.
  */
 export function compatibilityOf(manifest) {
+  if (madeForBlends(manifest)) return 'ACRYL Blends'
   const requires = manifest.acryl?.requires
   if (requires === null || typeof requires !== 'object') return 'DSH stock'
   return sides(requires).some(name => ACRYL_ONLY_SERVICES.has(name)) ? 'ACRYL' : 'Both'
+}
+
+/** How a person installs it: an acrylblends plugin through that app's pull, any other through DSH's installer and the ACRYL IDE's pull. */
+function installLines({ manifest, tarball, ownerName, repoName }) {
+  const source = ownerName && repoName ? `github:${ownerName}/${repoName}@${manifest.version}` : undefined
+  if (madeForBlends(manifest) && source) return { install: `npm run acryl -- plugin pull ${source}` }
+  return { install: `dsh plugin --profile desktop add ${tarball}`, ...(source ? { acrylPull: `/plugin pull ${source}` } : {}) }
 }
 
 /** A registry entry for a release, or null when the package is not labelled a Cordis plugin. */
@@ -91,7 +103,6 @@ export function pluginFromRelease({ manifest, repository, owner, release, asset,
     published: typeof release.published_at === 'string' ? release.published_at.slice(0, 10) : null,
     tarball: asset.browser_download_url,
     integrity,
-    install: `dsh plugin --profile desktop add ${asset.browser_download_url}`,
-    ...(ownerName && repoName ? { acrylPull: `/plugin pull github:${ownerName}/${repoName}@${manifest.version}` } : {}),
+    ...installLines({ manifest, tarball: asset.browser_download_url, ownerName, repoName }),
   }
 }

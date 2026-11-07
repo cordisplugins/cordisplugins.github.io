@@ -5,7 +5,7 @@ import { categories, plugins, type Compatibility } from "../lib/registry-data";
 import { PageIntro, usePageMeta } from "../components/layouts";
 import { PluginCard } from "../components/registry-ui";
 
-const tiers: (Compatibility | "All")[] = ["All", "Both", "ACRYL", "DSH stock"];
+const tiers: (Compatibility | "All")[] = ["All", "Both", "ACRYL", "ACRYL Blends", "DSH stock"];
 
 export default function PluginsIndex() {
   usePageMeta("Browse Plugins", "Search the public Cordis plugin registry by capability and compatibility.");

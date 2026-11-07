@@ -3,7 +3,7 @@ import { Blocks, Bot, Box, Braces, Cable, Database, Palette, PanelsTopLeft, type
 
 export const slugify = (value: string) => value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 
-export type Compatibility = "Both" | "ACRYL" | "DSH stock";
+export type Compatibility = "Both" | "ACRYL" | "ACRYL Blends" | "DSH stock";
 
 export type Plugin = {
   slug: string;
