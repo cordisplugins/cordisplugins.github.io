@@ -3,7 +3,9 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
-  # No schedule: the registry is synced when a plugin is released (run this workflow by hand, or push), never on a timer.
+  schedule:
+    # The registry is discovered (topic cordis-plugin + a release tarball), so a new plugin appears within the hour without a pull request.
+    - cron: '17 * * * *'
   workflow_dispatch:
 
 permissions:
