@@ -18,7 +18,7 @@ export default function Home() {
             <h1 className="max-w-4xl font-display text-5xl font-semibold leading-[.98] sm:text-6xl lg:text-7xl">The building blocks of <span className="text-primary">Cordis.</span></h1>
             <p className="mt-7 max-w-2xl text-lg leading-8 text-muted-foreground">Discover small, composable plugins that become tools, services, canvas tabs, agent capabilities — and complete ACRYL Blends. Hot-reload them into a running app; replace them without a restart.</p>
             <div className="mt-9 flex flex-wrap gap-3"><Link to="/plugins" className="btn-primary">Browse plugins <ArrowRight size={16}/></Link><Link to="/publish" className="btn-secondary">Publish yours</Link></div>
-            <div className="mt-12 flex flex-wrap gap-8 border-t border-border pt-6 font-mono text-xs text-muted-foreground"><span><b className="text-foreground">{plugins.length}</b> real plugins listed</span><span><b className="text-foreground">{publishers}</b> publisher</span><span><b className="text-foreground">2</b> runtimes: ACRYL &amp; DSH stock</span></div>
+            <div className="mt-12 flex flex-wrap gap-8 border-t border-border pt-6 font-mono text-xs text-muted-foreground"><span><b className="text-foreground">{plugins.length}</b> real plugins listed</span><span><b className="text-foreground">{publishers}</b> {publishers === 1 ? "publisher" : "publishers"}</span><span><b className="text-foreground">2</b> runtimes: ACRYL &amp; DSH stock</span></div>
           </div>
           <div className="relative mt-16 hidden place-items-center lg:grid"><img src="/logo/wordmark.png" alt="Cordis" className="h-80 w-80 object-contain" /></div>
         </div>

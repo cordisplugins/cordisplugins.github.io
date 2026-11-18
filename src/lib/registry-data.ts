@@ -1,9 +1,13 @@
 import discovered from "../data/discovered-plugins.json";
+import officialOwners from "../../official-owners.json";
 import { Blocks, Bot, Box, Braces, Cable, Database, Palette, PanelsTopLeft, type LucideIcon } from "lucide-react";
 
 export const slugify = (value: string) => value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 
 export type Compatibility = "Both" | "ACRYL" | "ACRYL Blends" | "DSH stock";
+
+/** Official: its repository belongs to one of the project's accounts (official-owners.json); community: anyone else. Computed, never claimed. */
+export type Origin = "official" | "community";
 
 export type Plugin = {
   slug: string;
@@ -13,6 +17,7 @@ export type Plugin = {
   compatibility: Compatibility;
   publisher: string;
   repoUrl: string;
+  origin: Origin;
   private?: boolean;
   acrylPackage?: boolean;
   provides: string[];
@@ -59,7 +64,7 @@ export const categories: Category[] = [
 // built so far — not placeholder registry data. Three live inside the
 // acryldev/acryl monorepo (repoUrl points at plugins/<name> there); the rest
 // are their own repos already transferred to github.com/cordisplugins.
-const maintainedPlugins: Plugin[] = [
+const maintainedPlugins: Omit<Plugin, "origin">[] = [
   {
     slug: "cordis-plugin-market",
     name: "cordis-plugin-market",
@@ -191,8 +196,11 @@ const maintainedPlugins: Plugin[] = [
 // Every public repository with the topic cordis-plugin and a release tarball, refreshed by scripts/sync-plugins.mjs. A hand-written entry above
 // wins over a discovered one with the same name.
 const maintainedNames = new Set(maintainedPlugins.map((p) => p.name));
+// A hand-written entry has no owner id: its repository's owner login decides, against the same list the sync uses.
+const officialLogins = new Set(officialOwners.owners.map((o) => o.login.toLowerCase()));
+const ownerOf = (repoUrl: string) => /github\.com\/([^/]+)/.exec(repoUrl)?.[1]?.toLowerCase() ?? "";
 export const plugins: Plugin[] = [
-  ...maintainedPlugins,
+  ...maintainedPlugins.map((p) => ({ ...p, origin: (officialLogins.has(ownerOf(p.repoUrl)) ? "official" : "community") as Origin })),
   ...(discovered.plugins as Plugin[]).filter((p) => !maintainedNames.has(p.name)),
 ];
 

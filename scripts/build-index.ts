@@ -10,6 +10,7 @@ const entries = plugins
     category: p.category,
     compatibility: p.compatibility,
     publisher: p.publisher,
+    origin: p.origin,
     repo: p.repoUrl,
     page: `https://cordisplugins.github.io/plugins/p/${p.slug}`,
     acrylPackage: p.acrylPackage === true,

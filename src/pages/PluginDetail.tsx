@@ -3,6 +3,7 @@ import { Box, ExternalLink, GitFork, Lock, PackageCheck } from "lucide-react";
 import { plugins } from "../lib/registry-data";
 import { usePageMeta } from "../components/layouts";
 import { CompatibilityBadge, CopyCommand } from "../components/ui";
+import { OriginBadge } from "../components/registry-ui";
 import NotFound from "./NotFound";
 
 export default function PluginDetail() {
@@ -13,11 +14,13 @@ export default function PluginDetail() {
   return (
     <div className="mx-auto max-w-[1440px] px-6 py-12 lg:px-8">
       <Link to="/plugins" className="font-mono text-xs text-muted-foreground hover:text-primary">← Registry</Link>
-      <div className="mt-8 grid gap-12 lg:grid-cols-[1fr_320px]">
-        <article>
-          <div className="flex flex-wrap items-center gap-3"><span className="grid h-12 w-12 place-items-center border border-border bg-surface-2"><Box className="text-primary" /></span><CompatibilityBadge value={p.compatibility} />{p.acrylPackage && <span className="border border-primary px-2 py-1 font-mono text-[10px] text-primary">ACRYL-PACKAGE</span>}{p.private && <span className="inline-flex items-center gap-1 border border-border px-2 py-1 font-mono text-[10px] uppercase text-muted-foreground"><Lock size={11} />Not yet loadable</span>}</div>
+      <div className="mt-8 grid grid-cols-[minmax(0,1fr)] gap-12 lg:grid-cols-[minmax(0,1fr)_320px]">
+        <article className="min-w-0">
+          <div className="flex flex-wrap items-center gap-3"><span className="grid h-12 w-12 place-items-center border border-border bg-surface-2"><Box className="text-primary" /></span><OriginBadge origin={p.origin} /><CompatibilityBadge value={p.compatibility} />{p.acrylPackage && <span className="border border-primary px-2 py-1 font-mono text-[10px] text-primary">ACRYL-PACKAGE</span>}{p.private && <span className="inline-flex items-center gap-1 border border-border px-2 py-1 font-mono text-[10px] uppercase text-muted-foreground"><Lock size={11} />Not yet loadable</span>}</div>
           <h1 className="mt-6 break-words font-mono text-3xl font-semibold sm:text-5xl">{p.name}</h1>
+          <p className="mt-3 font-mono text-sm text-muted-foreground">by <a className="text-primary" href={`https://github.com/${p.publisher}`} target="_blank" rel="noreferrer">@{p.publisher}</a></p>
           <p className="mt-5 max-w-3xl text-lg leading-8 text-muted-foreground">{p.summary}</p>
+          {p.origin === "community" && <div className="doc-note mt-6 max-w-3xl"><strong>Community plugin</strong><p>Made and maintained by @{p.publisher}, not by ACRYL. We list it automatically from <a className="text-primary" href={p.repoUrl} target="_blank" rel="noreferrer">its public repository</a> and have not reviewed its code. Install it only if you trust the author.</p></div>}
           {!p.private && <div className="mt-8 space-y-3"><CopyCommand command={p.install ?? `pnpm add ${p.name}`} />{p.acrylPull && <CopyCommand command={p.acrylPull} />}{p.native && <p className="text-sm text-muted-foreground">Also downloads, for your computer only: {p.native.map((n) => `${{ darwin: 'macOS', win32: 'Windows', linux: 'Linux' }[n.os] ?? n.os}${n.cpu ? ` ${n.cpu}` : ''} ${Math.round(n.size / 1e6)} MB`).join(' · ')}</p>}</div>}
           <section className="prose-cordis py-10">
             <h2>About</h2>
@@ -48,7 +51,7 @@ export default function PluginDetail() {
           <div className="border border-border bg-card p-5"><p className="font-mono text-xs uppercase text-muted-foreground">Package</p>{[["Publisher", `@${p.publisher}`], ...(p.version ? [["Version", p.version]] : []), ...(p.published ? [["Released", p.published]] : []), ["Category", p.category], ["License", "MIT"]].map(([a, b]) => <div key={a} className="mt-4 flex justify-between gap-3 text-sm"><span className="text-muted-foreground">{a}</span><b>{b}</b></div>)}</div>
           <div className="border border-border p-5"><p className="font-mono text-xs uppercase text-muted-foreground">Provenance</p><p className="mt-4 text-sm"><b>@{p.publisher}</b></p><a className="mt-4 inline-flex items-center gap-2 text-sm text-primary" href={p.repoUrl} target="_blank" rel="noreferrer">Source repository <ExternalLink size={12} /></a>{p.integrity && <p className="mt-4 break-all font-mono text-[11px] text-muted-foreground" title="sha512 of the release tarball">{p.integrity}</p>}</div>
           {!p.private && <div className="border border-border p-5"><p className="font-mono text-xs uppercase text-muted-foreground">Used in these Blends</p><p className="mt-4 flex items-center gap-2 text-sm text-muted-foreground"><GitFork size={16} className="text-primary" />See <a className="text-primary" href="https://acrylblends.github.io" target="_blank" rel="noreferrer">acrylblends.github.io</a> for current compositions</p></div>}
-          <div className="flex items-center gap-2 border border-primary/40 bg-primary/10 p-4 text-sm"><PackageCheck size={20} className="text-primary" />Registry metadata verified against the source repository</div>
+          <div className="flex items-center gap-2 border border-primary/40 bg-primary/10 p-4 text-sm"><PackageCheck size={20} className="text-primary" />{p.origin === "official" ? "Registry metadata verified against the source repository" : "Metadata read from the author's release; code not reviewed"}</div>
         </aside>
       </div>
     </div>

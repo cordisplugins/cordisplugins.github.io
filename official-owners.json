@@ -1,0 +1,10 @@
+{
+  "//": "The accounts whose repositories are official. The sync compares the owner's numeric GitHub id (a renamed org's old login can be registered by anyone); the login is for people. A community entry may not use a reserved npm scope or name prefix. Read by scripts/sync-plugins.mjs.",
+  "owners": [
+    { "login": "acrylblends", "id": 329572928 },
+    { "login": "acryldev", "id": 321071188 },
+    { "login": "cordisplugins", "id": 328784535 }
+  ],
+  "reservedScopes": ["@acryl", "@acrylblends", "@acryldev", "@cordisplugins"],
+  "reservedPrefixes": ["acrylblends-", "cordisplugins-"]
+}

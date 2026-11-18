@@ -10,7 +10,7 @@ export function SectionHeading({ index, title, description }: { index?: string; 
 }
 export function CopyCommand({ command }: { command: string }) {
   const [copied, setCopied] = useState(false);
-  return <div className="flex min-w-0 items-center border border-border bg-code px-4 py-3 text-code-foreground"><code className="min-w-0 flex-1 overflow-x-auto whitespace-nowrap font-mono text-xs sm:text-sm">{command}</code><button aria-label="Copy command" className="icon-button ml-3 shrink-0 text-code-foreground" onClick={() => { navigator.clipboard?.writeText(command); setCopied(true); window.setTimeout(() => setCopied(false), 1500); }}>{copied ? <Check size={16}/> : <Copy size={16}/>}</button></div>;
+  return <div className="flex min-w-0 items-center border border-border bg-code px-4 py-3 text-code-foreground"><code className="min-w-0 flex-1 overflow-x-auto whitespace-nowrap font-mono text-xs [scrollbar-color:var(--border)_transparent] [scrollbar-width:thin] sm:text-sm">{command}</code><button aria-label="Copy command" className="icon-button ml-3 shrink-0 text-code-foreground" onClick={() => { navigator.clipboard?.writeText(command); setCopied(true); window.setTimeout(() => setCopied(false), 1500); }}>{copied ? <Check size={16}/> : <Copy size={16}/>}</button></div>;
 }
 export function CodeBlock({ label, code }: { label: string; code: string }) {
   const [copied, setCopied] = useState(false);

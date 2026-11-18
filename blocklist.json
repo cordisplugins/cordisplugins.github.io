@@ -1,0 +1,5 @@
+{
+  "//": "Owners (GitHub logins) or repositories (owner/name) the sync never lists, so a bad entry leaves at the next sync. Compared case-insensitively.",
+  "owners": [],
+  "repositories": []
+}

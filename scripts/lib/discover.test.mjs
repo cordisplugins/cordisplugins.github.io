@@ -4,7 +4,7 @@ import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'nod
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, test } from 'node:test'
-import { categoryOf, compatibilityOf, nativeSizes, packageJsonFromTarball, pluginFromRelease } from './discover.mjs'
+import { blockedReason, categoryOf, compatibilityOf, nativeSizes, originOf, packageJsonFromTarball, pluginFromRelease, reservedNameReason } from './discover.mjs'
 
 const made = []
 afterEach(() => { for (const dir of made.splice(0)) rmSync(dir, { recursive: true, force: true }) })
@@ -28,7 +28,7 @@ test('reads package.json from inside a release tarball', () => {
 test('a release becomes an entry: provides and consumes from the contract, its slots, version, install lines for DSH and ACRYL', () => {
   const entry = pluginFromRelease({ manifest: quickNotes, repository: 'https://github.com/inboxxobni/acryl-quick-notes', owner: 'inboxxobni', release, asset, integrity: 'sha512-x' })
   assert.deepEqual(entry, {
-    slug: 'acryl-quick-notes', name: 'acryl-quick-notes', summary: 'Quick Notes', category: 'ui-client', compatibility: 'Both', publisher: 'inboxxobni',
+    slug: 'acryl-quick-notes', name: 'acryl-quick-notes', summary: 'Quick Notes', category: 'ui-client', compatibility: 'Both', publisher: 'inboxxobni', origin: 'community',
     repoUrl: 'https://github.com/inboxxobni/acryl-quick-notes', acrylPackage: true, provides: [], consumes: ['connection', 'dshHomePath', 'slots', 'webServer'],
     slots: { offers: [], fills: ['conversation.session.header.actions'] }, version: '0.2.2', releaseTag: 'v0.2.2', published: '2026-10-16',
     tarball: asset.browser_download_url, integrity: 'sha512-x', install: `dsh plugin --profile desktop add ${asset.browser_download_url}`,
@@ -76,4 +76,27 @@ test('a plugin made in an acrylblends app says so, whatever it requires, and ins
 test('a plugin without the acrylblends keyword keeps its tier and its DSH and ACRYL lines', () => {
   assert.equal(compatibilityOf({ keywords: ['cordis-plugin'], acryl: { requires: { host: ['connection'] } } }), 'Both')
   assert.equal(compatibilityOf({ keywords: 'acrylblends' }), 'DSH stock')
+})
+
+const official = JSON.parse(readFileSync(new URL('../../official-owners.json', import.meta.url), 'utf8'))
+
+test('origin comes from the owner id, never the login an author could take over', () => {
+  assert.equal(originOf(329572928, official), 'official')
+  assert.equal(originOf(1, official), 'community')
+  assert.equal(originOf(undefined, official), 'community')
+})
+
+test('a community name may not use an official scope or prefix', () => {
+  assert.match(reservedNameReason('@acrylblends/notes', official), /official scope @acrylblends/)
+  assert.match(reservedNameReason('@ACRYL/x', official), /official scope @acryl$/)
+  assert.match(reservedNameReason('cordisplugins-notes', official), /official prefix cordisplugins-/)
+  assert.equal(reservedNameReason('@acrylish/notes', official), undefined)
+  assert.equal(reservedNameReason('my-acrylblends-notes', official), undefined)
+})
+
+test('the blocklist matches an owner or one repository, ignoring case', () => {
+  const blocklist = { owners: ['Bad'], repositories: ['someone/Evil-Plugin'] }
+  assert.match(blockedReason('bad/anything', blocklist), /owner bad/)
+  assert.match(blockedReason('Someone/evil-plugin', blocklist), /blocklist/)
+  assert.equal(blockedReason('someone/good', blocklist), undefined)
 })

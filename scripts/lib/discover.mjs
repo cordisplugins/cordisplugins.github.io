@@ -79,6 +79,30 @@ function installLines({ manifest, tarball, ownerName, repoName }) {
   return { install: `dsh plugin --profile desktop add ${tarball}`, ...(source ? { acrylPull: `/plugin pull ${source}` } : {}) }
 }
 
+/**
+ * Official or community: a fact from who owns the repository (its numeric GitHub id, which a rename cannot take over), never from what the
+ * package says about itself. `official` is official-owners.json.
+ */
+export const originOf = (ownerId, official) => (official.owners.some(owner => owner.id === ownerId) ? 'official' : 'community')
+
+/** Why a community entry's name may not be listed: it uses an official npm scope or name prefix. Undefined when it may. */
+export function reservedNameReason(name, official) {
+  const lower = String(name).toLowerCase()
+  const scope = official.reservedScopes.find(reserved => lower.startsWith(`${reserved}/`))
+  if (scope !== undefined) return `its name ${name} uses the official scope ${scope}`
+  const prefix = official.reservedPrefixes.find(reserved => lower.startsWith(reserved))
+  return prefix === undefined ? undefined : `its name ${name} uses the official prefix ${prefix}`
+}
+
+/** Why a repository is on the blocklist (blocklist.json), or undefined. */
+export function blockedReason(fullName, blocklist) {
+  const lower = fullName.toLowerCase()
+  const owner = lower.split('/')[0]
+  if (blocklist.owners.some(blocked => blocked.toLowerCase() === owner)) return `its owner ${owner} is on the blocklist`
+  if (blocklist.repositories.some(blocked => blocked.toLowerCase() === lower)) return 'it is on the blocklist'
+  return undefined
+}
+
 /** A registry entry for a release, or null when the package is not labelled a Cordis plugin. */
 /** What a plugin downloads besides itself, per OS and CPU (`acrylblends.native` in its package.json): only where and how big, for the install button. */
 export function nativeSizes(manifest) {
@@ -89,7 +113,7 @@ export function nativeSizes(manifest) {
     .map(item => ({ os: item.os, ...(typeof item.cpu === 'string' ? { cpu: item.cpu } : {}), size: item.size }))
 }
 
-export function pluginFromRelease({ manifest, repository, owner, release, asset, integrity }) {
+export function pluginFromRelease({ manifest, repository, owner, origin = 'community', release, asset, integrity }) {
   if (typeof manifest?.name !== 'string' || typeof manifest.version !== 'string') return null
   const keywords = Array.isArray(manifest.keywords) ? manifest.keywords : []
   if (!keywords.includes('cordis-plugin')) return null
@@ -102,6 +126,7 @@ export function pluginFromRelease({ manifest, repository, owner, release, asset,
     category: categoryOf(manifest),
     compatibility: compatibilityOf(manifest),
     publisher: owner,
+    origin,
     repoUrl: repository,
     ...(keywords.includes('acryl-package') ? { acrylPackage: true } : {}),
     provides: sides(acryl.provides),
