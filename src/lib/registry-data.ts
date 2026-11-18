@@ -25,6 +25,8 @@ export type Plugin = {
   integrity?: string;
   install?: string;
   acrylPull?: string;
+  /** What it downloads besides itself, per OS and CPU (its `acrylblends.native`): the frame shows this computer's size before an add. */
+  native?: { os: string; cpu?: string; size: number }[];
   /** UI slots it declares and fills, as ACRYL generates them from its code. */
   slots?: { offers: string[]; fills: string[] };
 };

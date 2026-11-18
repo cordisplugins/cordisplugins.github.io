@@ -15,7 +15,7 @@ const entries = plugins
     acrylPackage: p.acrylPackage === true,
     provides: p.provides,
     consumes: p.consumes,
-    ...(p.version ? { version: p.version, releaseTag: p.releaseTag, published: p.published, tarball: p.tarball, integrity: p.integrity, install: p.install, acrylPull: p.acrylPull } : {}),
+    ...(p.version ? { version: p.version, releaseTag: p.releaseTag, published: p.published, tarball: p.tarball, integrity: p.integrity, install: p.install, acrylPull: p.acrylPull, ...(p.native ? { native: p.native } : {}) } : {}),
   }))
   .sort((a, b) => a.id.localeCompare(b.id));
 

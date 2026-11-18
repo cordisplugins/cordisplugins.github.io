@@ -80,6 +80,15 @@ function installLines({ manifest, tarball, ownerName, repoName }) {
 }
 
 /** A registry entry for a release, or null when the package is not labelled a Cordis plugin. */
+/** What a plugin downloads besides itself, per OS and CPU (`acrylblends.native` in its package.json): only where and how big, for the install button. */
+export function nativeSizes(manifest) {
+  const native = manifest.acrylblends?.native
+  if (!Array.isArray(native)) return []
+  return native
+    .filter(item => item && typeof item.os === 'string' && Number.isSafeInteger(item.size) && item.size > 0)
+    .map(item => ({ os: item.os, ...(typeof item.cpu === 'string' ? { cpu: item.cpu } : {}), size: item.size }))
+}
+
 export function pluginFromRelease({ manifest, repository, owner, release, asset, integrity }) {
   if (typeof manifest?.name !== 'string' || typeof manifest.version !== 'string') return null
   const keywords = Array.isArray(manifest.keywords) ? manifest.keywords : []
@@ -103,6 +112,7 @@ export function pluginFromRelease({ manifest, repository, owner, release, asset,
     published: typeof release.published_at === 'string' ? release.published_at.slice(0, 10) : null,
     tarball: asset.browser_download_url,
     integrity,
+    ...(nativeSizes(manifest).length > 0 ? { native: nativeSizes(manifest) } : {}),
     ...installLines({ manifest, tarball: asset.browser_download_url, ownerName, repoName }),
   }
 }

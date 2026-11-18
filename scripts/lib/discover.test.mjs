@@ -4,7 +4,7 @@ import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'nod
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, test } from 'node:test'
-import { categoryOf, compatibilityOf, packageJsonFromTarball, pluginFromRelease } from './discover.mjs'
+import { categoryOf, compatibilityOf, nativeSizes, packageJsonFromTarball, pluginFromRelease } from './discover.mjs'
 
 const made = []
 afterEach(() => { for (const dir of made.splice(0)) rmSync(dir, { recursive: true, force: true }) })
@@ -43,6 +43,17 @@ test('category and compatibility are computed, and a package without the cordis-
   assert.equal(compatibilityOf({ acryl: { requires: { host: ['connection'] } } }), 'Both')
   assert.equal(compatibilityOf({}), 'DSH stock')
   assert.equal(pluginFromRelease({ manifest: { ...quickNotes, keywords: ['dsh-plugin'] }, repository: 'r', owner: 'o', release, asset, integrity: 'x' }), null)
+})
+
+test('a plugin that brings a native package lists only its sizes per OS and CPU', () => {
+  const manifest = { ...quickNotes, acrylblends: { native: [
+    { package: '@x/engine-darwin-arm64', version: '1.0.0', os: 'darwin', cpu: 'arm64', integrity: 'sha512-a', size: 153160461 },
+    { package: '@x/engine-wasm', version: '1.0.0', os: 'linux', integrity: 'sha512-b', size: 152357942 },
+    { os: 'win32', size: -1 },
+  ] } }
+  assert.deepEqual(nativeSizes(manifest), [{ os: 'darwin', cpu: 'arm64', size: 153160461 }, { os: 'linux', size: 152357942 }])
+  assert.deepEqual(pluginFromRelease({ manifest, repository: 'https://github.com/o/r', owner: 'o', release, asset, integrity: 'x' }).native, nativeSizes(manifest))
+  assert.equal(pluginFromRelease({ manifest: quickNotes, repository: 'https://github.com/o/r', owner: 'o', release, asset, integrity: 'x' }).native, undefined)
 })
 
 const pomodoro = {
