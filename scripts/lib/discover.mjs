@@ -113,7 +113,22 @@ export function nativeSizes(manifest) {
     .map(item => ({ os: item.os, ...(typeof item.cpu === 'string' ? { cpu: item.cpu } : {}), size: item.size }))
 }
 
-export function pluginFromRelease({ manifest, repository, owner, origin = 'community', release, asset, integrity }) {
+/**
+ * Where the plugin sits in the 100 categories of acrylblends.github.io/blends: its package.json keywords `acrylblends-category-<slug>` and, optionally,
+ * `acrylblends-subcategory-<slug>` (what ACRYL's share writes), named by `categories` (acrylblends.github.io/categories.json). Undefined when it names
+ * none, or one that is not on the list.
+ */
+export function storePlacementOf(keywords, categories = []) {
+  const words = Array.isArray(keywords) ? keywords.filter(word => typeof word === 'string') : []
+  const slug = words.find(word => word.startsWith('acrylblends-category-'))?.slice('acrylblends-category-'.length)
+  const category = categories.find(c => c.slug === slug)
+  if (category === undefined) return undefined
+  const subSlug = words.find(word => word.startsWith('acrylblends-subcategory-'))?.slice('acrylblends-subcategory-'.length)
+  const sub = category.subs?.find(s => s.slug === subSlug)
+  return { category: category.name, categorySlug: category.slug, ...(sub === undefined ? {} : { subcategory: sub.name, subcategorySlug: sub.slug }) }
+}
+
+export function pluginFromRelease({ manifest, repository, owner, origin = 'community', release, asset, integrity, categories = [] }) {
   if (typeof manifest?.name !== 'string' || typeof manifest.version !== 'string') return null
   const keywords = Array.isArray(manifest.keywords) ? manifest.keywords : []
   if (!keywords.includes('cordis-plugin')) return null
@@ -124,6 +139,7 @@ export function pluginFromRelease({ manifest, repository, owner, origin = 'commu
     name: manifest.name,
     summary: typeof manifest.description === 'string' ? manifest.description : '',
     category: categoryOf(manifest),
+    ...(storePlacementOf(keywords, categories) === undefined ? {} : { placement: storePlacementOf(keywords, categories) }),
     compatibility: compatibilityOf(manifest),
     publisher: owner,
     origin,

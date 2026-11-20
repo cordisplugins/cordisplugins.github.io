@@ -16,6 +16,8 @@ export type Plugin = {
   category: string;
   compatibility: Compatibility;
   publisher: string;
+  /** Where it sits in the Blends store's categories (acrylblends.github.io/blends), from its package.json keywords. */
+  placement?: { category: string; categorySlug: string; subcategory?: string; subcategorySlug?: string };
   repoUrl: string;
   origin: Origin;
   private?: boolean;

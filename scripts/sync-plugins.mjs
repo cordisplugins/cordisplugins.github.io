@@ -17,6 +17,12 @@ async function json(url) {
   return response.json()
 }
 
+// The Blends store's categories, where a plugin can be placed (its package.json keywords); without the list, plugins are listed unplaced.
+const categories = await fetch('https://acrylblends.github.io/categories.json', { signal: AbortSignal.timeout(20_000) })
+  .then(response => (response.ok ? response.json() : {}))
+  .then(body => (Array.isArray(body?.categories) ? body.categories : []))
+  .catch(() => [])
+
 const repositories = []
 for (let page = 1; page <= 10; page += 1) {
   const result = await json(`https://api.github.com/search/repositories?q=${encodeURIComponent('topic:cordis-plugin is:public archived:false')}&per_page=100&page=${page}`)
@@ -49,7 +55,7 @@ for (const repository of repositories) {
     if (manifest === null) { skip(repository, 'its release file has no readable package.json'); continue }
     const reserved = origin === 'community' ? reservedNameReason(manifest.name, official) : undefined
     if (reserved !== undefined) { skip(repository, `${reserved}, which only official repositories may use`); continue }
-    const plugin = pluginFromRelease({ manifest, repository: repository.html_url, owner: repository.owner.login, origin, release, asset: tarballs[0], integrity: integrityOf(bytes) })
+    const plugin = pluginFromRelease({ manifest, repository: repository.html_url, owner: repository.owner.login, origin, release, asset: tarballs[0], integrity: integrityOf(bytes), categories })
     if (plugin === null) { skip(repository, 'its package.json has no name and version, or no cordis-plugin keyword'); continue }
     plugins.push(plugin)
   } catch (cause) {

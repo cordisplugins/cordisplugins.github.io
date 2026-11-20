@@ -11,6 +11,7 @@ export function PluginCard({ plugin }: { plugin: Plugin }) {
         <div className="flex flex-col items-end gap-1.5"><OriginBadge origin={plugin.origin} /><CompatibilityBadge value={plugin.compatibility} />{plugin.private && <span className="inline-flex items-center gap-1 font-mono text-[10px] uppercase text-muted-foreground"><Lock size={10}/>Not yet loadable</span>}</div>
       </div>
       <h2 className="font-mono text-base font-semibold text-foreground group-hover:text-primary">{plugin.name}</h2>
+      {plugin.placement && <p className="mt-2 font-mono text-[11px] text-muted-foreground">{[plugin.placement.category, plugin.placement.subcategory].filter(Boolean).join(" › ")}</p>}
       <p className="mt-3 flex-1 text-sm leading-6 text-muted-foreground">{plugin.summary}</p>
       <div className="mt-6 flex items-center justify-between border-t border-border pt-4 font-mono text-[11px] text-muted-foreground"><span>@{plugin.publisher}{plugin.version && <span className="ml-2 text-foreground">v{plugin.version}</span>}</span>{plugin.acrylPackage && <span className="text-primary">acryl-package</span>}</div>
     </Link>

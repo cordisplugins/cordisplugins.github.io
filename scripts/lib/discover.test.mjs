@@ -4,7 +4,7 @@ import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'nod
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, test } from 'node:test'
-import { blockedReason, categoryOf, compatibilityOf, nativeSizes, originOf, packageJsonFromTarball, pluginFromRelease, reservedNameReason } from './discover.mjs'
+import { blockedReason, categoryOf, compatibilityOf, nativeSizes, originOf, packageJsonFromTarball, pluginFromRelease, reservedNameReason, storePlacementOf } from './discover.mjs'
 
 const made = []
 afterEach(() => { for (const dir of made.splice(0)) rmSync(dir, { recursive: true, force: true }) })
@@ -99,4 +99,14 @@ test('the blocklist matches an owner or one repository, ignoring case', () => {
   assert.match(blockedReason('bad/anything', blocklist), /owner bad/)
   assert.match(blockedReason('Someone/evil-plugin', blocklist), /blocklist/)
   assert.equal(blockedReason('someone/good', blocklist), undefined)
+})
+
+test('a plugin is placed in the Blends store categories by its package.json keywords', () => {
+  const categories = [{ slug: 'business', name: 'Business', subs: [{ slug: 'finance', name: 'Finance' }] }]
+  assert.deepEqual(storePlacementOf(['cordis-plugin', 'acrylblends-category-business', 'acrylblends-subcategory-finance'], categories), { category: 'Business', categorySlug: 'business', subcategory: 'Finance', subcategorySlug: 'finance' })
+  assert.deepEqual(storePlacementOf(['acrylblends-category-business', 'acrylblends-subcategory-games'], categories), { category: 'Business', categorySlug: 'business' })
+  assert.equal(storePlacementOf(['acrylblends-category-cooking'], categories), undefined)
+  assert.equal(storePlacementOf(['cordis-plugin'], categories), undefined)
+  const entry = pluginFromRelease({ manifest: { name: 'p', version: '1.0.0', keywords: ['cordis-plugin', 'acrylblends-category-business'] }, repository: 'https://github.com/o/p', owner: 'o', release: { tag_name: 'v1.0.0' }, asset: { browser_download_url: 'https://x/p.tgz' }, integrity: 'x', categories })
+  assert.deepEqual(entry.placement, { category: 'Business', categorySlug: 'business' })
 })
