@@ -1,0 +1,407 @@
+{
+  "formatVersion": 1,
+  "status": "proposal - owner approval pending; not read by the site",
+  "generatedFrom": "spec 053 B, registry entries of 2026-11-25",
+  "overrides": {
+    "cordis-plugin-market": {
+      "kind": "markets",
+      "domain": "95-01",
+      "reason": "In-instance catalog that browses, inspects and installs plugins from a running Cordis instance."
+    },
+    "dsh-client-ui-brand-acryl": {
+      "kind": "themes",
+      "domain": "64-01",
+      "reason": "Swappable ACRYL brand for the DSH Web client's sidebar and conversation hero."
+    },
+    "dsh-community-fabric": {
+      "kind": "integrations",
+      "domain": "96-01",
+      "reason": "Documentation-first interoperability standard for community DSH plugins; not yet loadable."
+    },
+    "acryl-development-canvas": {
+      "kind": "dev",
+      "domain": "63-02",
+      "reason": "Adds a multi-PTY canvas with agent launch and a browser to ACRYL Desktop."
+    },
+    "acryl-development-canvas-web": {
+      "kind": "dev",
+      "domain": "64-01",
+      "reason": "Web-surface counterpart of the ACRYL Development Canvas."
+    },
+    "acryl-dsh-editor-plugin": {
+      "kind": "dev",
+      "domain": "04-01",
+      "component": "04-01-01",
+      "reason": "Monaco-based code editor for ACRYL Desktop."
+    },
+    "acryl-dsh-editor-plugin-web": {
+      "kind": "dev",
+      "domain": "64-01",
+      "reason": "Web-surface counterpart of the Monaco code editor."
+    },
+    "acryl-dsh-editor-plugin-cli": {
+      "kind": "dev",
+      "domain": "65-05",
+      "reason": "Terminal-surface counterpart of the code editor."
+    },
+    "cordis-plugin-graph": {
+      "kind": "dev",
+      "domain": "04-05",
+      "reason": "Zoomable graph of loaded plugins, dependencies and the Loader tree."
+    },
+    "dsh-cordis": {
+      "kind": "dev",
+      "domain": "96-03",
+      "reason": "Core Cordis integration and plugin lifecycle for DeepSeek Harness."
+    },
+    "pi-cordis": {
+      "kind": "dev",
+      "domain": "58-05",
+      "reason": "Cordis integration for the Pi coding-agent runtime."
+    },
+    "@a42null/dsh-opencode-zen-plugin": {
+      "kind": "models",
+      "domain": "05-01",
+      "component": "05-01-01",
+      "reason": "OpenCode Console models as a selectable DSH provider."
+    },
+    "@anonyjcy/dsh-j-space": {
+      "kind": "agents",
+      "domain": "05-04",
+      "reason": "J-Space cognition agent preset for DSH."
+    },
+    "@deepdeck/dsh-hackernews-reader": {
+      "kind": "web",
+      "domain": "12-03",
+      "reason": "Hacker News reader with app-scoped AI conversations."
+    },
+    "@dsh-external/dsh-client-ui-skin-deep-space-command-bridge": {
+      "kind": "themes",
+      "domain": "64-01",
+      "reason": "Independent cockpit theme for the DSH Web client."
+    },
+    "@dsh-external/dsh-cluster-preset": {
+      "kind": "agents",
+      "domain": "05-05",
+      "component": "05-05-02",
+      "reason": "Cluster-mode preset that delegates to five named experts."
+    },
+    "@feiyu999/dsh-prompt-optimizer": {
+      "kind": "tools",
+      "domain": "05-03",
+      "component": "05-03-03",
+      "reason": "Rewrites the composer text into a well-formed prompt."
+    },
+    "@flowingspring/dsh-workspace-memory": {
+      "kind": "memory",
+      "domain": "06-04",
+      "component": "06-04-01",
+      "reason": "Workspace-scoped durable memory for DSH."
+    },
+    "@wizzy-1547/dsh-updater": {
+      "kind": "dev",
+      "domain": "94-03",
+      "reason": "Checks for and installs DeepSeek Harness updates."
+    },
+    "@zekilou/dsh-sidebar-session-tabs": {
+      "kind": "sessions",
+      "domain": "02-06",
+      "reason": "Filter tabs and tags for the sidebar session list."
+    },
+    "acryl-quick-notes": {
+      "kind": "ui",
+      "domain": "02-02",
+      "reason": "TopBar notebook with each note stored as a text file on the host."
+    },
+    "dsh-acp-server": {
+      "kind": "integrations",
+      "domain": "60-02",
+      "reason": "ACP server that lets Zed and other ACP clients drive DSH agents."
+    },
+    "dsh-agent-ping": {
+      "kind": "sessions",
+      "domain": "02-04",
+      "component": "02-04-02",
+      "reason": "Cross-session @ that wakes and delivers after user approval."
+    },
+    "dsh-agent-profiles": {
+      "kind": "agents",
+      "domain": "05-04",
+      "reason": "Per-conversation agent profiles with memory injection and import/export."
+    },
+    "dsh-as-mcp": {
+      "kind": "integrations",
+      "domain": "60-02",
+      "reason": "Exposes DSH workspaces, sessions, files and commands as an MCP server."
+    },
+    "dsh-bite": {
+      "kind": "memory",
+      "domain": "06-07",
+      "component": "06-07-01",
+      "reason": "Pins key turns and reinjects them after context compression."
+    },
+    "dsh-bug-gps": {
+      "kind": "dev",
+      "domain": "04-05",
+      "component": "04-05-02",
+      "reason": "Records browser bugs and verifies fixes against the original source."
+    },
+    "dsh-call-session": {
+      "kind": "agents",
+      "domain": "05-05",
+      "component": "05-05-03",
+      "reason": "Peer session calls, a shared blackboard and a topology canvas."
+    },
+    "dsh-calm": {
+      "kind": "sessions",
+      "domain": "05-06",
+      "reason": "Emotional checkpoint and context repair for heated exchanges."
+    },
+    "dsh-codex-official-adapter": {
+      "kind": "models",
+      "domain": "05-01",
+      "component": "05-01-01",
+      "reason": "ChatGPT subscription as a DSH model provider."
+    },
+    "dsh-deepseek-web-login": {
+      "kind": "models",
+      "domain": "05-01",
+      "component": "05-01-01",
+      "reason": "DeepSeek web chat models as a provider with browser login."
+    },
+    "dsh-done-alert": {
+      "kind": "channels",
+      "domain": "02-04",
+      "component": "02-04-04",
+      "reason": "Completion chime and a colored taskbar badge."
+    },
+    "dsh-doudizhu": {
+      "kind": "fun",
+      "domain": "41-04",
+      "component": "41-04-02",
+      "reason": "Three-player LAN Doudizhu card table with computer levels."
+    },
+    "dsh-facet": {
+      "kind": "docs",
+      "domain": "07-04",
+      "reason": "Turns a model name or arXiv link into 2D and 3D architecture diagrams."
+    },
+    "dsh-file-opener": {
+      "kind": "platform",
+      "domain": "63-03",
+      "reason": "Opens file and folder paths from the chat in the sidebar or the OS."
+    },
+    "dsh-github-gate": {
+      "kind": "git",
+      "domain": "04-03",
+      "component": "04-03-03",
+      "reason": "Nine guarded GitHub tools with a confirm gate and human approval."
+    },
+    "dsh-image-viewer-pro": {
+      "kind": "vision",
+      "domain": "76-04",
+      "reason": "Zoom, pan, rotate, download and gallery browsing for chat images."
+    },
+    "dsh-immune-system": {
+      "kind": "memory",
+      "domain": "06-07",
+      "component": "06-07-04",
+      "reason": "Captures failed-then-fixed episodes as reusable antibodies."
+    },
+    "dsh-johnny": {
+      "kind": "fun",
+      "domain": "05-04",
+      "reason": "Playful informant agent mode with hidden money-channel triggers."
+    },
+    "dsh-knowledge": {
+      "kind": "memory",
+      "domain": "88-03",
+      "reason": "Per-project knowledge base of pitfalls and reusable practices."
+    },
+    "dsh-long-term-memory": {
+      "kind": "memory",
+      "domain": "06-07",
+      "component": "06-07-02",
+      "reason": "Injects remembered requirements into every new session."
+    },
+    "dsh-memory-forge": {
+      "kind": "memory",
+      "domain": "06-07",
+      "component": "06-07-04",
+      "reason": "Recalls turns and forges procedures into SKILL.md files."
+    },
+    "dsh-memory-hub": {
+      "kind": "memory",
+      "domain": "06-04",
+      "reason": "Local memory helper that syncs between clients and an own AI."
+    },
+    "dsh-nga-reader-plugin": {
+      "kind": "web",
+      "domain": "12-03",
+      "reason": "Persistent NGA forum reader with app-scoped AI conversations."
+    },
+    "dsh-plugin-discovery": {
+      "kind": "markets",
+      "domain": "95-02",
+      "reason": "Browses the full DSH plugin market from the sidebar."
+    },
+    "dsh-plugin-dot": {
+      "kind": "agents",
+      "domain": "05-04",
+      "reason": "Chief-of-staff agent preset with memory, tasks and reminders."
+    },
+    "dsh-plugin-message-edit": {
+      "kind": "sessions",
+      "domain": "02-06",
+      "reason": "Edits past prompts to rewind, branch and switch message versions."
+    },
+    "dsh-plugin-rea": {
+      "kind": "integrations",
+      "domain": "60-02",
+      "reason": "Provisions REA's tools and registers its MCP server in DSH."
+    },
+    "dsh-plugin-rollout-scout": {
+      "kind": "models",
+      "domain": "05-02",
+      "component": "05-02-05",
+      "reason": "Detects which conversation model the account is served."
+    },
+    "dsh-plugin-smooth-stream": {
+      "kind": "ui",
+      "domain": "02-06",
+      "reason": "Paragraph-batched streaming animations and scroll follow."
+    },
+    "dsh-public-edge": {
+      "kind": "remote",
+      "domain": "10-02",
+      "component": "10-02-04",
+      "reason": "One-click Cloudflare tunnel, public link and LAN bridge."
+    },
+    "dsh-qwen-mode": {
+      "kind": "models",
+      "domain": "05-01",
+      "component": "05-01-01",
+      "reason": "Qwen, GenieX and QwenCloud providers for DSH."
+    },
+    "dsh-session-remover": {
+      "kind": "platform",
+      "domain": "63-03",
+      "reason": "Deletes conversations and subagent sessions to the Windows recycle bin."
+    },
+    "dsh-session-wake": {
+      "kind": "sessions",
+      "domain": "05-04",
+      "component": "05-04-03",
+      "reason": "Wakes a running session from an external process."
+    },
+    "dsh-startup-command": {
+      "kind": "workflow",
+      "domain": "85-01",
+      "reason": "Runs PowerShell, CMD, Bash and Python presets at startup."
+    },
+    "dsh-super-wechat-bot": {
+      "kind": "channels",
+      "domain": "02-04",
+      "reason": "OCR-driven WeChat auto-replies in the user's voice."
+    },
+    "dsh-t3-model-picker": {
+      "kind": "models",
+      "domain": "05-02",
+      "component": "05-02-01",
+      "reason": "Provider-grouped model picker with favorites and shortcuts."
+    },
+    "dsh-team-chat": {
+      "kind": "channels",
+      "domain": "02-05",
+      "component": "02-05-02",
+      "reason": "Realtime Agent Teams room with mailbox, avatars and @ dispatch."
+    },
+    "dsh-tide": {
+      "kind": "workflow",
+      "domain": "85-04",
+      "reason": "Graceful pause, budget fallback and watchdog resume with handoffs."
+    },
+    "dsh-update-center": {
+      "kind": "dev",
+      "domain": "94-03",
+      "reason": "Checks and updates plugins and the desktop client."
+    },
+    "dsh-web-api-balance": {
+      "kind": "usage",
+      "domain": "07-03",
+      "component": "07-03-04",
+      "reason": "Shows DeepSeek API balance and the conversation's cost."
+    },
+    "dsh-wechat": {
+      "kind": "channels",
+      "domain": "02-04",
+      "reason": "Connects DSH to WeChat for tasks, results and approvals."
+    },
+    "dsh-whale-eyes": {
+      "kind": "vision",
+      "domain": "05-07",
+      "component": "05-07-02",
+      "reason": "Screen-sense summary of the foreground app and open windows, no screenshots."
+    },
+    "dsh-yanfield": {
+      "kind": "docs",
+      "domain": "86-01",
+      "reason": "Long-form fiction writing desk with manuscript, outline and revisions."
+    },
+    "dsh-yizi-themes": {
+      "kind": "themes",
+      "domain": "64-01",
+      "reason": "19 theme styles, a theme studio and WCAG contrast checks."
+    },
+    "hello-1118": {
+      "kind": "dev",
+      "domain": "04-05",
+      "reason": "Workshop hello test plugin."
+    },
+    "hello-ana": {
+      "kind": "dev",
+      "domain": "04-05",
+      "reason": "Workshop hello test plugin."
+    },
+    "hello-ben": {
+      "kind": "dev",
+      "domain": "04-05",
+      "reason": "Workshop hello test plugin."
+    },
+    "hello-cleo": {
+      "kind": "dev",
+      "domain": "04-05",
+      "reason": "Workshop hello test plugin; its release has no description."
+    },
+    "hello-cycle": {
+      "kind": "dev",
+      "domain": "04-05",
+      "reason": "Workshop hello test plugin."
+    },
+    "hello-w2350": {
+      "kind": "dev",
+      "domain": "04-05",
+      "reason": "Workshop hello test plugin."
+    },
+    "hello-walk-2215": {
+      "kind": "dev",
+      "domain": "04-05",
+      "reason": "Workshop hello test plugin."
+    },
+    "office-preview": {
+      "kind": "docs",
+      "domain": "86-04",
+      "reason": "Opens Word, Excel and PowerPoint files as PDF in the document preview."
+    },
+    "skill-mcp-manager": {
+      "kind": "tools",
+      "domain": "05-04",
+      "reason": "Settings page to list, add, switch and test skills and MCP servers."
+    },
+    "ws-ana-clock": {
+      "kind": "dev",
+      "domain": "04-05",
+      "reason": "Workshop clock test plugin."
+    }
+  }
+}
