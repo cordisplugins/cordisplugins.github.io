@@ -1,4 +1,6 @@
 import discovered from "../data/discovered-plugins.json";
+import classificationOverrides from "../data/classification-overrides.json";
+import { withOverride } from "../../scripts/lib/classification.mjs";
 import officialOwners from "../../official-owners.json";
 import { Blocks, Bot, Box, Braces, Cable, Database, Palette, PanelsTopLeft, type LucideIcon } from "lucide-react";
 
@@ -205,10 +207,11 @@ const maintainedNames = new Set(maintainedPlugins.map((p) => p.name));
 // A hand-written entry has no owner id: its repository's owner login decides, against the same list the sync uses.
 const officialLogins = new Set(officialOwners.owners.map((o) => o.login.toLowerCase()));
 const ownerOf = (repoUrl: string) => /github\.com\/([^/]+)/.exec(repoUrl)?.[1]?.toLowerCase() ?? "";
+// An author's own keywords win; the override file (spec 053 B) is read only after the owner approves it.
 export const plugins: Plugin[] = [
   ...maintainedPlugins.map((p) => ({ ...p, origin: (officialLogins.has(ownerOf(p.repoUrl)) ? "official" : "community") as Origin })),
   ...(discovered.plugins as Plugin[]).filter((p) => !maintainedNames.has(p.name)),
-];
+].map((p) => withOverride(p, classificationOverrides));
 
 for (const c of categories) c.count = plugins.filter((p) => p.category === c.slug).length;
 

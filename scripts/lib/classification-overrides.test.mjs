@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
-import { readdirSync, readFileSync } from 'node:fs'
+import { readFileSync } from 'node:fs'
 import { test } from 'node:test'
+import { overridesApproved, withOverride } from './classification.mjs'
 
 const catalog = JSON.parse(readFileSync(new URL('../../public/categories.json', import.meta.url), 'utf8'))
 const proposal = JSON.parse(readFileSync(new URL('../../src/data/classification-overrides.json', import.meta.url), 'utf8'))
@@ -19,7 +20,7 @@ test('the override file is a pending proposal with valid kinds, domains and comp
   assert.equal(proposal.formatVersion, 1)
   assert.match(proposal.status, /proposal/u)
   const entries = Object.entries(proposal.overrides)
-  assert.equal(entries.length, 75)
+  assert.equal(entries.length, 85)
   for (const [name, entry] of entries) {
     assert.ok(name.length > 0)
     assert.ok(kinds.has(entry.kind), `${name}: unknown kind ${entry.kind}`)
@@ -33,15 +34,13 @@ test('the override file is a pending proposal with valid kinds, domains and comp
   }
 })
 
-test('the override file is not wired into the site', () => {
-  const offenders = []
-  const walk = directory => {
-    for (const entry of readdirSync(directory, { withFileTypes: true })) {
-      const path = new URL(`${entry.name}${entry.isDirectory() ? '/' : ''}`, directory)
-      if (entry.isDirectory()) walk(path)
-      else if (/\.(?:ts|tsx)$/u.test(entry.name) && readFileSync(path, 'utf8').includes('classification-overrides')) offenders.push(path.pathname)
-    }
-  }
-  walk(new URL('../../src/', import.meta.url))
-  assert.deepEqual(offenders, [])
+test('the override file is read only once approved, and an author keyword wins', () => {
+  const plugin = { name: 'x', summary: '' }
+  const file = status => ({ status, overrides: { x: { kind: 'dev', domain: '04-05', component: '04-05-02' } } })
+  assert.equal(overridesApproved(file(proposal.status)), false)
+  assert.deepEqual(withOverride(plugin, file('proposal - owner approval pending')), plugin)
+  assert.deepEqual(withOverride(plugin, file('approved by the owner 2026-11-26')), { ...plugin, kind: 'dev', domain: '04-05', component: '04-05-02' })
+  assert.deepEqual(withOverride({ ...plugin, kind: 'fun' }, file('approved')), { ...plugin, kind: 'fun', domain: '04-05', component: '04-05-02' })
+  assert.deepEqual(withOverride({ ...plugin, domain: '41-02' }, file('approved')), { ...plugin, kind: 'dev', domain: '41-02' })
+  assert.equal(withOverride({ name: 'unknown' }, file('approved')).kind, undefined)
 })
