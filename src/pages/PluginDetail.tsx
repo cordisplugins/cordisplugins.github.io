@@ -1,6 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import { Box, ExternalLink, GitFork, Lock, PackageCheck } from "lucide-react";
 import { plugins } from "../lib/registry-data";
+import { classificationOf, useCatalog } from "../lib/catalog";
 import { usePageMeta } from "../components/layouts";
 import { CompatibilityBadge, CopyCommand } from "../components/ui";
 import { OriginBadge } from "../components/registry-ui";
@@ -9,8 +10,10 @@ import NotFound from "./NotFound";
 export default function PluginDetail() {
   const { pluginSlug } = useParams();
   const p = plugins.find((x) => x.slug === pluginSlug);
+  const catalog = useCatalog();
   usePageMeta(p?.name ?? "Plugin", p?.summary ?? "Cordis package details");
   if (!p) return <NotFound />;
+  const classification = classificationOf(p, catalog.state === "live" ? catalog.catalog : undefined);
   return (
     <div className="mx-auto max-w-[1440px] px-6 py-12 lg:px-8">
       <Link to="/plugins" className="font-mono text-xs text-muted-foreground hover:text-primary">← Registry</Link>
@@ -48,7 +51,7 @@ export default function PluginDetail() {
           </section>
         </article>
         <aside className="space-y-4">
-          <div className="border border-border bg-card p-5"><p className="font-mono text-xs uppercase text-muted-foreground">Package</p>{[["Publisher", `@${p.publisher}`], ...(p.version ? [["Version", p.version]] : []), ...(p.published ? [["Released", p.published]] : []), ["Category", p.category], ...(p.placement ? [["Blends category", [p.placement.category, p.placement.subcategory].filter(Boolean).join(" › ")]] : []), ["License", "MIT"]].map(([a, b]) => <div key={a} className="mt-4 flex justify-between gap-3 text-sm"><span className="text-muted-foreground">{a}</span><b>{b}</b></div>)}</div>
+          <div className="border border-border bg-card p-5"><p className="font-mono text-xs uppercase text-muted-foreground">Package</p>{[["Publisher", `@${p.publisher}`], ...(p.version ? [["Version", p.version]] : []), ...(p.published ? [["Released", p.published]] : []), ["Category", p.category], ...(p.placement ? [["Blends category", [p.placement.category, p.placement.subcategory].filter(Boolean).join(" › ")]] : []), ...(classification.classified ? [...(classification.kindName ? [["Kind", classification.kindName]] : []), ...(classification.domainName ? [["Domain", [classification.domainName, classification.subName].filter(Boolean).join(" › ")]] : []), ...(classification.componentName ? [["Component", classification.componentName]] : [])] : [["Classification", "Unclassified"]]), ["License", "MIT"]].map(([a, b]) => <div key={a} className="mt-4 flex justify-between gap-3 text-sm"><span className="text-muted-foreground">{a}</span><b>{b}</b></div>)}</div>
           <div className="border border-border p-5"><p className="font-mono text-xs uppercase text-muted-foreground">Provenance</p><p className="mt-4 text-sm"><b>@{p.publisher}</b></p><a className="mt-4 inline-flex items-center gap-2 text-sm text-primary" href={p.repoUrl} target="_blank" rel="noreferrer">Source repository <ExternalLink size={12} /></a>{p.integrity && <p className="mt-4 break-all font-mono text-[11px] text-muted-foreground" title="sha512 of the release tarball">{p.integrity}</p>}</div>
           {!p.private && <div className="border border-border p-5"><p className="font-mono text-xs uppercase text-muted-foreground">Used in these Blends</p><p className="mt-4 flex items-center gap-2 text-sm text-muted-foreground"><GitFork size={16} className="text-primary" />See <a className="text-primary" href="https://acrylblends.github.io" target="_blank" rel="noreferrer">acrylblends.github.io</a> for current compositions</p></div>}
           <div className="flex items-center gap-2 border border-primary/40 bg-primary/10 p-4 text-sm"><PackageCheck size={20} className="text-primary" />{p.origin === "official" ? "Registry metadata verified against the source repository" : "Metadata read from the author's release; code not reviewed"}</div>

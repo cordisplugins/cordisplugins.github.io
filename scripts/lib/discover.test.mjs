@@ -4,7 +4,7 @@ import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'nod
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, test } from 'node:test'
-import { blockedReason, categoryOf, compatibilityOf, nativeSizes, originOf, packageJsonFromTarball, pluginFromRelease, reservedNameReason, storePlacementOf } from './discover.mjs'
+import { blockedReason, categoryOf, classificationOf, compatibilityOf, nativeSizes, originOf, packageJsonFromTarball, pluginFromRelease, reservedNameReason, storePlacementOf } from './discover.mjs'
 
 const made = []
 afterEach(() => { for (const dir of made.splice(0)) rmSync(dir, { recursive: true, force: true }) })
@@ -109,4 +109,18 @@ test('a plugin is placed in the Blends store categories by its package.json keyw
   assert.equal(storePlacementOf(['cordis-plugin'], categories), undefined)
   const entry = pluginFromRelease({ manifest: { name: 'p', version: '1.0.0', keywords: ['cordis-plugin', 'acrylblends-category-business'] }, repository: 'https://github.com/o/p', owner: 'o', release: { tag_name: 'v1.0.0' }, asset: { browser_download_url: 'https://x/p.tgz' }, integrity: 'x', categories })
   assert.deepEqual(entry.placement, { category: 'Business', categorySlug: 'business' })
+})
+
+test('a plugin declares its catalog kind, domain and component by package.json keywords', () => {
+  assert.deepEqual(classificationOf(['cordis-plugin']), {})
+  assert.deepEqual(classificationOf(['cordis-kind-models', 'cordis-domain-05-01', 'cordis-component-05-01-01']), { kind: 'models', domain: '05-01', component: '05-01-01' })
+  assert.deepEqual(classificationOf(['cordis-kind-tools', 'cordis-domain-05-04']), { kind: 'tools', domain: '05-04' })
+  const entry = pluginFromRelease({
+    manifest: { name: 'p', version: '1.0.0', keywords: ['cordis-plugin', 'cordis-kind-models', 'cordis-domain-05-01', 'cordis-component-05-01-01'] },
+    repository: 'https://github.com/o/p', owner: 'o', release: { tag_name: 'v1.0.0' }, asset: { browser_download_url: 'https://x/p.tgz' }, integrity: 'x',
+  })
+  assert.equal(entry.kind, 'models')
+  assert.equal(entry.domain, '05-01')
+  assert.equal(entry.component, '05-01-01')
+  assert.deepEqual(classificationOf(['cordis-kind-themes', 'acrylblends-category-business']), { kind: 'themes' })
 })

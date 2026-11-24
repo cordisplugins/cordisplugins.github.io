@@ -3,6 +3,7 @@ import { SiteLayout } from "./components/layouts";
 import Home from "./pages/Home";
 import PluginsIndex from "./pages/PluginsIndex";
 import PluginsCategory from "./pages/PluginsCategory";
+import PluginsDomain from "./pages/PluginsDomain";
 import PluginDetail from "./pages/PluginDetail";
 import DocsIndex from "./pages/DocsIndex";
 import DocPage from "./pages/DocPage";
@@ -21,6 +22,7 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/plugins" element={<PluginsIndex />} />
         <Route path="/plugins/p/:pluginSlug" element={<PluginDetail />} />
+        <Route path="/plugins/:domain/:sub" element={<PluginsDomain />} />
         <Route path="/plugins/:category" element={<PluginsCategory />} />
         <Route path="/docs" element={<DocsIndex />} />
         <Route path="/docs/:group/:item" element={<DocPage />} />

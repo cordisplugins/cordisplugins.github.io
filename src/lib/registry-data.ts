@@ -18,6 +18,10 @@ export type Plugin = {
   publisher: string;
   /** Where it sits in the Blends store's categories (acrylblends.github.io/blends), from its package.json keywords. */
   placement?: { category: string; categorySlug: string; subcategory?: string; subcategorySlug?: string };
+  /** The shared catalog classification from its package.json keywords (spec 053): kind slug, v04 domain NN-SS and optional component NN-SS-EE. */
+  kind?: string;
+  domain?: string;
+  component?: string;
   repoUrl: string;
   origin: Origin;
   private?: boolean;

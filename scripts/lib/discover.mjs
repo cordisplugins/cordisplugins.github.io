@@ -128,6 +128,20 @@ export function storePlacementOf(keywords, categories = []) {
   return { category: category.name, categorySlug: category.slug, ...(sub === undefined ? {} : { subcategory: sub.name, subcategorySlug: sub.slug }) }
 }
 
+/**
+ * Where the plugin sits in the shared catalog (spec 053): package.json keywords `cordis-kind-<slug>` (one of the owner's 22 kinds),
+ * `cordis-domain-NN-SS` (the primary v04 subcategory) and, optionally, `cordis-component-NN-SS-EE`. Raw values: the site validates
+ * them against public/categories.json and shows a plugin without them as Unclassified.
+ */
+export function classificationOf(keywords) {
+  const words = Array.isArray(keywords) ? keywords.filter(word => typeof word === 'string') : []
+  const value = prefix => words.find(word => word.startsWith(prefix))?.slice(prefix.length)
+  const kind = value('cordis-kind-')
+  const domain = value('cordis-domain-')
+  const component = value('cordis-component-')
+  return { ...(kind ? { kind } : {}), ...(domain ? { domain } : {}), ...(component ? { component } : {}) }
+}
+
 export function pluginFromRelease({ manifest, repository, owner, origin = 'community', release, asset, integrity, categories = [] }) {
   if (typeof manifest?.name !== 'string' || typeof manifest.version !== 'string') return null
   const keywords = Array.isArray(manifest.keywords) ? manifest.keywords : []
@@ -139,6 +153,7 @@ export function pluginFromRelease({ manifest, repository, owner, origin = 'commu
     name: manifest.name,
     summary: typeof manifest.description === 'string' ? manifest.description : '',
     category: categoryOf(manifest),
+    ...classificationOf(keywords),
     ...(storePlacementOf(keywords, categories) === undefined ? {} : { placement: storePlacementOf(keywords, categories) }),
     compatibility: compatibilityOf(manifest),
     publisher: owner,
