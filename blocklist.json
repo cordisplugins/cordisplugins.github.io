@@ -1,5 +1,17 @@
 {
-  "//": "Owners (GitHub logins) or repositories (owner/name) the sync never lists, so a bad entry leaves at the next sync. Compared case-insensitively.",
+  "//": "Owners (GitHub logins) or repositories (owner/name) the sync never lists, so a bad entry leaves at the next sync. Compared case-insensitively. inboxxobni scaffolds (hello-*, sh-guide-clock, sh1121-ana, ws-ana-clock): our own test plugins, not for the catalog; only the listing is hidden, their repositories and releases are untouched.",
   "owners": [],
-  "repositories": []
+  "repositories": [
+    "inboxxobni/hello-1118",
+    "inboxxobni/hello-ana",
+    "inboxxobni/hello-ben",
+    "inboxxobni/hello-cleo",
+    "inboxxobni/hello-cycle",
+    "inboxxobni/hello-share",
+    "inboxxobni/hello-w2350",
+    "inboxxobni/hello-walk-2215",
+    "inboxxobni/sh-guide-clock",
+    "inboxxobni/sh1121-ana",
+    "inboxxobni/ws-ana-clock"
+  ]
 }

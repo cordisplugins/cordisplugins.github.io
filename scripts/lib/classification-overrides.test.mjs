@@ -16,11 +16,13 @@ for (const category of catalog.categories) {
   }
 }
 
-test('the override file is a pending proposal with valid kinds, domains and components', () => {
+test('the override file is approved, with valid kinds, domains and components and no blocked plugin', () => {
   assert.equal(proposal.formatVersion, 1)
-  assert.match(proposal.status, /proposal/u)
+  assert.equal(overridesApproved(proposal), true)
+  const blocked = new Set(JSON.parse(readFileSync(new URL('../../blocklist.json', import.meta.url), 'utf8')).repositories.map(name => name.split('/')[1]))
+  for (const name of Object.keys(proposal.overrides)) assert.equal(blocked.has(name), false, `${name} is on the blocklist`)
   const entries = Object.entries(proposal.overrides)
-  assert.equal(entries.length, 85)
+  assert.equal(entries.length, 75)
   for (const [name, entry] of entries) {
     assert.ok(name.length > 0)
     assert.ok(kinds.has(entry.kind), `${name}: unknown kind ${entry.kind}`)
@@ -37,7 +39,7 @@ test('the override file is a pending proposal with valid kinds, domains and comp
 test('the override file is read only once approved, and an author keyword wins', () => {
   const plugin = { name: 'x', summary: '' }
   const file = status => ({ status, overrides: { x: { kind: 'dev', domain: '04-05', component: '04-05-02' } } })
-  assert.equal(overridesApproved(file(proposal.status)), false)
+  assert.equal(overridesApproved(file('proposal - owner approval pending')), false)
   assert.deepEqual(withOverride(plugin, file('proposal - owner approval pending')), plugin)
   assert.deepEqual(withOverride(plugin, file('approved by the owner 2026-11-26')), { ...plugin, kind: 'dev', domain: '04-05', component: '04-05-02' })
   assert.deepEqual(withOverride({ ...plugin, kind: 'fun' }, file('approved')), { ...plugin, kind: 'fun', domain: '04-05', component: '04-05-02' })

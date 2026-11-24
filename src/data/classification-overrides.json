@@ -1,7 +1,7 @@
 {
   "formatVersion": 1,
-  "status": "proposal - owner approval pending; not read by the site",
-  "generatedFrom": "spec 053 B, the live registry index of 2026-11-25 (84 entries) and the one private entry the site lists, classified from each description and README",
+  "status": "approved (owner 2026-11-25)",
+  "generatedFrom": "spec 053 B, the live registry index of 2026-11-25 (84 entries) and the one private entry the site lists, minus the 10 test scaffolds now on blocklist.json",
   "overrides": {
     "@a42null/dsh-opencode-zen-plugin": {
       "kind": "models",
@@ -374,41 +374,6 @@
       "domain": "02-06",
       "reason": "YiziMarkdown theme pack: 19 themes, Theme Studio, custom brand, contrast checks."
     },
-    "hello-1118": {
-      "kind": "dev",
-      "domain": "96-01",
-      "reason": "Scaffold from the sharing-cycle tests (inboxxobni test org); no function of its own."
-    },
-    "hello-ana": {
-      "kind": "dev",
-      "domain": "96-01",
-      "reason": "Scaffold from the sharing-cycle tests (inboxxobni test org); no function of its own."
-    },
-    "hello-ben": {
-      "kind": "dev",
-      "domain": "96-01",
-      "reason": "Scaffold from the sharing-cycle tests (inboxxobni test org); no function of its own."
-    },
-    "hello-cleo": {
-      "kind": "dev",
-      "domain": "96-01",
-      "reason": "Scaffold from the sharing-cycle tests (inboxxobni test org); no function of its own and no description."
-    },
-    "hello-cycle": {
-      "kind": "dev",
-      "domain": "96-01",
-      "reason": "Scaffold from the sharing-cycle tests (inboxxobni test org); no function of its own."
-    },
-    "hello-w2350": {
-      "kind": "dev",
-      "domain": "96-01",
-      "reason": "Scaffold from the sharing-cycle tests (inboxxobni test org); no function of its own."
-    },
-    "hello-walk-2215": {
-      "kind": "dev",
-      "domain": "96-01",
-      "reason": "Scaffold from the sharing-cycle tests (inboxxobni test org); no function of its own."
-    },
     "office-preview": {
       "kind": "docs",
       "domain": "86-04",
@@ -419,25 +384,10 @@
       "domain": "58-05",
       "reason": "Cordis integration for the Pi coding-agent runtime."
     },
-    "sh-guide-clock": {
-      "kind": "dev",
-      "domain": "96-01",
-      "reason": "Scaffold from the sharing-cycle tests (inboxxobni test org); no function of its own."
-    },
-    "sh1121-ana": {
-      "kind": "dev",
-      "domain": "96-01",
-      "reason": "Scaffold from the sharing-cycle tests (inboxxobni test org); its only function is GET /sh1121-ana answering a greeting."
-    },
     "skill-mcp-manager": {
       "kind": "tools",
       "domain": "05-04",
       "reason": "Settings page that lists, adds, switches and tests skills and MCP servers."
-    },
-    "ws-ana-clock": {
-      "kind": "dev",
-      "domain": "96-01",
-      "reason": "Scaffold from the sharing-cycle tests (inboxxobni test org); no function of its own."
     },
     "dsh-community-fabric": {
       "kind": "integrations",
