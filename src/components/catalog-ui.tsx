@@ -21,40 +21,52 @@ export function KindChips({ catalog, plugins, value, onChange }: { catalog?: Cat
   );
 }
 
-/** The non-empty v04 domains on the left; a plugin without a domain is counted as unclassified, not hidden. */
-export function DomainTree({ catalog, plugins }: { catalog?: Catalog; plugins: Plugin[] }) {
-  // Open on a desktop where it sits beside the list; folded on a phone, where 40 domains would push the list off the screen.
-  const [open, setOpen] = useState(() => typeof window !== "undefined" && window.matchMedia("(min-width: 1024px)").matches);
-  const groups = new Map<string, { name: string; slug: string; number: number; subs: Map<string, { name: string; slug: string; count: number }> }>();
+/** The grey of an empty category or subcategory: still listed and clickable, a little quieter. */
+export const EMPTY_ROW = "opacity-55 hover:opacity-100";
+
+/** Plugin counts per category id and per subcategory id, from the plugins' primary domain. */
+export function domainCounts(plugins: Plugin[]): { byCategory: Map<string, number>; bySub: Map<string, number> } {
+  const byCategory = new Map<string, number>();
+  const bySub = new Map<string, number>();
   for (const plugin of plugins) {
-    const at = domainOf(catalog, plugin.domain);
-    if (at === undefined) continue;
-    const group = groups.get(at.category.id) ?? { name: at.category.name, slug: at.category.slug, number: at.category.number, subs: new Map() };
-    const sub = group.subs.get(at.sub.id) ?? { name: at.sub.name, slug: at.sub.slug, count: 0 };
-    sub.count += 1;
-    group.subs.set(at.sub.id, sub);
-    groups.set(at.category.id, group);
+    if (plugin.domain === undefined) continue;
+    bySub.set(plugin.domain, (bySub.get(plugin.domain) ?? 0) + 1);
+    const category = plugin.domain.split("-")[0];
+    byCategory.set(category, (byCategory.get(category) ?? 0) + 1);
   }
+  return { byCategory, bySub };
+}
+
+/** All 100 categories and their subcategories with their codes (01, 01-01) as on acrylblends.github.io/blends; the empty ones are greyed a little, never hidden. A plugin without a domain is counted as unclassified. */
+export function DomainTree({ catalog, plugins }: { catalog?: Catalog; plugins: Plugin[] }) {
+  // Open on a desktop where it sits beside the list; folded on a phone, where 100 categories would push the list off the screen.
+  const [open, setOpen] = useState(() => typeof window !== "undefined" && window.matchMedia("(min-width: 1024px)").matches);
+  const { byCategory, bySub } = domainCounts(plugins);
   const withoutDomain = plugins.filter((plugin) => plugin.domain === undefined).length;
-  const ordered = [...groups.values()].sort((a, b) => a.number - b.number);
+  const categories = catalog?.categories ?? [];
   return (
     <aside aria-label="Browse by domain" className="min-w-0">
       <details open={open} onToggle={(event) => setOpen(event.currentTarget.open)}>
-      <summary className="cursor-pointer font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">Browse by domain{ordered.length > 0 ? ` (${ordered.length})` : ""}</summary>
-      {ordered.length === 0 ? (
-        <p className="mt-4 border border-dashed border-border p-4 text-sm leading-6 text-muted-foreground">No classified plugins yet. The domains appear here as plugins add their keywords.</p>
+      <summary className="cursor-pointer font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">Browse by domain{categories.length > 0 ? ` (${categories.length})` : ""}</summary>
+      {categories.length === 0 ? (
+        <p className="mt-4 border border-dashed border-border p-4 text-sm leading-6 text-muted-foreground">Reading the domains.</p>
       ) : (
-        <div className="mt-4 space-y-5">
-          {ordered.map((group) => (
-            <div key={group.slug}>
-              <p className="font-mono text-xs font-semibold text-foreground">{group.name} <span className="font-normal text-muted-foreground">{[...group.subs.values()].reduce((sum, sub) => sum + sub.count, 0)}</span></p>
-              <ul className="mt-2 space-y-1.5">
-                {[...group.subs.entries()].sort((a, b) => a[1].name.localeCompare(b[1].name)).map(([id, sub]) => (
-                  <li key={id}><Link to={`/plugins/${group.slug}/${sub.slug}`} className="flex items-baseline justify-between gap-2 text-sm text-muted-foreground hover:text-primary"><span className="min-w-0">{sub.name}</span><span className="font-mono text-[10px]">{sub.count}</span></Link></li>
-                ))}
-              </ul>
-            </div>
-          ))}
+        <div className="mt-4 max-h-[60vh] overflow-y-auto overscroll-contain pr-1 lg:max-h-[75vh]" data-test="domain-tree">
+          {categories.map((category) => {
+            const count = byCategory.get(category.id) ?? 0;
+            return (
+              <details key={category.id} open={count > 0} className={`border-b border-border/60 py-1.5 ${count === 0 ? EMPTY_ROW : ""}`} data-empty={count === 0 ? "true" : undefined}>
+                <summary className="flex cursor-pointer items-baseline gap-2 font-mono text-xs font-semibold text-foreground"><span className="w-6 shrink-0 text-[10px] font-normal text-muted-foreground">{category.id}</span><span className="min-w-0 flex-1">{category.name}</span>{count > 0 && <span className="font-normal text-muted-foreground">{count}</span>}</summary>
+                <ul className="mb-2 ml-8 mt-2 space-y-1.5">
+                  <li><Link to={`/plugins/${category.slug}`} className="text-xs text-primary hover:underline">All of {category.name}</Link></li>
+                  {category.subcategories.map((sub) => {
+                    const subCount = bySub.get(sub.id) ?? 0;
+                    return <li key={sub.id} className={subCount === 0 ? EMPTY_ROW : ""} data-empty={subCount === 0 ? "true" : undefined}><Link to={`/plugins/${category.slug}/${sub.slug}`} className="flex items-baseline justify-between gap-2 text-sm text-muted-foreground hover:text-primary"><span className="flex min-w-0 gap-2"><span className="w-10 shrink-0 font-mono text-[10px]">{sub.id}</span><span className="min-w-0">{sub.name}</span></span>{subCount > 0 && <span className="font-mono text-[10px]">{subCount}</span>}</Link></li>;
+                  })}
+                </ul>
+              </details>
+            );
+          })}
         </div>
       )}
       {withoutDomain > 0 && <p className="mt-5 border-t border-border pt-4 font-mono text-[11px] text-muted-foreground">Unclassified <span className="text-foreground">{withoutDomain}</span></p>}

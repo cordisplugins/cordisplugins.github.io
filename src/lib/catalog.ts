@@ -60,6 +60,9 @@ export type Classification = {
   classified: boolean
   kindName?: string
   domainName?: string
+  /** The codes shown as on acrylblends.github.io/blends: the category `01` and its subcategory `01-01`. */
+  domainCode?: string
+  subCode?: string
   subName?: string
   componentName?: string
 }
@@ -72,7 +75,7 @@ export function classificationOf(plugin: Plugin, catalog: Catalog | undefined): 
   return {
     classified: plugin.kind !== undefined || plugin.domain !== undefined,
     ...(plugin.kind === undefined ? {} : { kindName: kind?.name ?? plugin.kind }),
-    ...(domain === undefined ? {} : { domainName: domain.category.name, subName: domain.sub.name }),
+    ...(domain === undefined ? {} : { domainName: domain.category.name, domainCode: domain.category.id, subName: domain.sub.name, subCode: domain.sub.id }),
     ...(plugin.component === undefined ? {} : { componentName: component?.component.name ?? plugin.component }),
   }
 }

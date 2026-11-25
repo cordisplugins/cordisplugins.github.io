@@ -20,8 +20,8 @@ export default function PluginsDomain() {
   return (
     <>
       <PageIntro
-        eyebrow={domain ? `Registry / ${domain.name}` : "Registry / Domain"}
-        title={sub?.name ?? "Plugin domain"}
+        eyebrow={domain ? `Registry / ${domain.id} ${domain.name}` : "Registry / Domain"}
+        title={sub ? `${sub.id} ${sub.name}` : "Plugin domain"}
         description={domain && sub ? `Plugins that declare ${domain.name} › ${sub.name} as their primary domain.` : "Reading the shared catalog."}
       />
       <div className="mx-auto max-w-[1440px] px-6 py-14 lg:px-8">
